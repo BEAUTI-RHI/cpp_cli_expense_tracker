@@ -5,6 +5,29 @@
 using namespace std;
 
 void print_exit_message();
+// functions for each option in the menu
+
+int record_expense(){};
+int list_all_expenses(
+		vector<unsigned float> recorded_amounts, 
+	      	vector<string> recorded_categories,
+		vector<string> recorded_descriptions
+		) {
+	for (unsigned int i = 0; i < recorded_amounts.size(); i++) {
+		cout << 
+	}
+	
+
+};
+int show_total_by_amount(){};
+int show_total_by_category(){};
+
+void print_exit_message () {
+	cout << "Exiting the program..." << endl;
+	cout << "Goodbye!" << endl;	
+
+}
+
 
 int create_dummy_expense(
 	vector<int> record_id 
@@ -63,12 +86,6 @@ bool perform_chosen_option(unsigned int chosen_option, vector<string> options) {
 	cout << selected_option << endl;
 	
 	return local_running;
-}
-
-void print_exit_message () {
-	cout << "Exiting the program..." << endl;
-	cout << "Goodbye!" << endl;	
-
 }
 
 
