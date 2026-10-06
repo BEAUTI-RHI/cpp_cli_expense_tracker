@@ -7,21 +7,58 @@ using namespace std;
 void print_exit_message();
 // functions for each option in the menu
 
-int record_expense(){};
+int record_expense(){
+
+	cout << "Recording an expense" << endl;
+	return 0;	
+};
+
 int list_all_expenses(
-		vector<unsigned float> recorded_amounts, 
+		vector<float> recorded_amounts, 
 	      	vector<string> recorded_categories,
 		vector<string> recorded_descriptions
 		) {
-	for (unsigned int i = 0; i < recorded_amounts.size(); i++) {
-		cout << 
-	}
+	/* 
+	 * TODO : 
+	 * Create a table like structure
+	 * | ID | Amount | Category | Description | 
+	 * | 1  | 20	 | some thing | Hello     | 
+	 * */
 	
+	if (	recorded_amounts.size() <= 0 || 
+		recorded_categories.size() <= 0 || 
+		recorded_descriptions.size() <= 0 ){
+		
+		cout << "No expenses recorded yet!" << endl;
+	} else {
+		for (unsigned int i = 0; i < recorded_amounts.size(); i++) {
+			float amount {recorded_amounts.at(i)}; 
+			string category {recorded_categories.at(i)}; 
+			string description {recorded_descriptions.at(i)}; 
 
+			cout << "ID: " << i << endl;
+			cout << "Amount: " << amount << endl;
+			cout << "Category: " << category << endl;
+			cout << "Description: " << description << endl;
+
+				
+		}
+	}
+	return 0;
+	
 };
-int show_total_by_amount(){};
-int show_total_by_category(){};
 
+int show_total_by_amount(){
+
+	cout << "Showing total by amount" << endl;
+	return 0;	
+};
+int show_total_by_category(){
+
+	cout << "Showing total by category" << endl;
+	return 0;;
+
+}
 void print_exit_message () {
 	cout << "Exiting the program..." << endl;
 	cout << "Goodbye!" << endl;	
@@ -59,7 +96,14 @@ void print_menu(vector<string> options) {
 	}
 }
 
-bool perform_chosen_option(unsigned int chosen_option, vector<string> options) {
+bool perform_chosen_option(
+		unsigned int chosen_option,
+	       	vector<string> options,
+		vector<float> recorded_amounts, 
+	      	vector<string> recorded_categories,
+		vector<string> recorded_descriptions
+	
+		) {
 
 	bool local_running {true}; 
 	// Out of bounds check
@@ -72,19 +116,49 @@ bool perform_chosen_option(unsigned int chosen_option, vector<string> options) {
 	}
 	
 	string exit_option {options.at(options.size() - 1)};
+	
 	string selected_option {options.at(chosen_option -1)};
+	 
+	cout << "Chosen Option: "; 
+	cout << selected_option << endl;
+	
+	if (chosen_option == 1) {
+		// Record an expense
+		cout << "Recording an expense" << endl;
+	
+		cout << "-----------------------------------" << endl;
+	}
+		
+	else if (chosen_option == 2) {
+		// List all Expsenses
+		list_all_expenses(
+			recorded_amounts, 
+			recorded_categories,
+			recorded_descriptions
+			);
 
+		cout << "-----------------------------------" << endl;
+	}
+	else if (chosen_option == 3) {
+		show_total_by_amount();
+
+		cout << "-----------------------------------" << endl;
+	}
+	else if (chosen_option == 4) {
+		show_total_by_category();
+
+		cout << "-----------------------------------" << endl;
+	
+	}
 	// Exit choice
-	if (selected_option == exit_option) {
+	else  {
 		print_exit_message();
 		local_running = false; // false means successful exit 
 
 		return local_running;
 	}
-
-	cout << "Chosen Option: "; 
-	cout << selected_option << endl;
 	
+
 	return local_running;
 }
 
@@ -99,12 +173,14 @@ int main () {
 	}; 
 	bool program_running {true};
 	int current_choice {0};
-	const int total_number_of_choices {menu_options.size()};
+	const int total_number_of_choices {5};
 	/* 
 	 * record table Id , amount , category, Description
 	 * we can access a record using the id
 	 */
-	vector<float> record_amount{0.0}; 
+	vector<float> recorded_amount{0.0}; 
+	vector<string> recorded_category{}; 
+	vector<string> recorded_description{}; 
 
 	cout << "Welcome to CLI Expense Tracker!" << endl;
 	
@@ -116,7 +192,13 @@ int main () {
 		cin >> current_choice;
 
 		// Perform the chosen option
-		program_running = perform_chosen_option(current_choice, menu_options);
+		program_running = perform_chosen_option(
+				current_choice,
+			       	menu_options,
+				recorded_amount,
+				recorded_category,
+				recorded_description	
+				);
 	
 	}	
 	return 0;
