@@ -7,9 +7,53 @@ using namespace std;
 void print_exit_message();
 // functions for each option in the menu
 
-int record_expense(){
+int record_expense(
+		vector<float> &recorded_amounts, 
+	      	vector<string> &recorded_categories,
+		vector<string> &recorded_descriptions
+		){
+	float amount {0.0};
+	string category {"General"};
+	string description {"No Desc"};
+	
+	bool continue_next {false};
+	
+	// Check for valid amount	
+	cout << "Please provide the amount: " ;
+       	cin >> amount;
+	while (!continue_next) {
+	
+		if (amount < 0.0) {
+			cout << "Invalid! Amount can not be negative" << endl;
+			cout << "Please Enter a valid amount: ";
+			cin >> amount;
+		
+		} else {
+			continue_next = true;
+		}
+	}
+	
+	// Get the category; no need for validation
+	cout << "Please enter a category ( Leave empty for optional ):" << endl;
+	cin >> category;	
+	
+	// Get the Description; 
+	cout << "Please enter a description ( Leave empty for optional ):" << endl;
+	cin >> description;
+	
 
-	cout << "Recording an expense" << endl;
+	// Confirmation
+	cout << "Recording the following expense:" << endl;
+		
+       	cout << "Amount: $" << amount << endl;
+       	cout << "Category: " << category << endl;
+       	cout << "Description: " << description << endl;
+
+	recorded_amounts.push_back(amount);
+	recorded_categories.push_back(category);
+	recorded_descriptions.push_back(description);
+
+
 	return 0;	
 };
 
@@ -24,24 +68,22 @@ int list_all_expenses(
 	 * | ID | Amount | Category | Description | 
 	 * | 1  | 20	 | some thing | Hello     | 
 	 * */
-	
+	string separator {" | "};
+
 	if (	recorded_amounts.size() <= 0 || 
 		recorded_categories.size() <= 0 || 
 		recorded_descriptions.size() <= 0 ){
 		
 		cout << "No expenses recorded yet!" << endl;
 	} else {
-		for (unsigned int i = 0; i < recorded_amounts.size(); i++) {
+		for (unsigned int i = 0; i < recorded_amounts.size() - 1; i++) {
 			float amount {recorded_amounts.at(i)}; 
 			string category {recorded_categories.at(i)}; 
 			string description {recorded_descriptions.at(i)}; 
 
-			cout << "ID: " << i << endl;
-			cout << "Amount: " << amount << endl;
-			cout << "Category: " << category << endl;
-			cout << "Description: " << description << endl;
-
+			cout << separator << "ID" <<  separator << "Amount" <<  separator <<  "Category" <<  separator << "Description" << separator << endl;
 				
+			cout << separator << i << separator << amount << separator << category << separator << description << separator << endl;				
 		}
 	}
 	return 0;
@@ -99,9 +141,9 @@ void print_menu(vector<string> options) {
 bool perform_chosen_option(
 		unsigned int chosen_option,
 	       	vector<string> options,
-		vector<float> recorded_amounts, 
-	      	vector<string> recorded_categories,
-		vector<string> recorded_descriptions
+		vector<float> &recorded_amounts, 
+	      	vector<string> &recorded_categories,
+		vector<string> &recorded_descriptions
 	
 		) {
 
@@ -127,6 +169,12 @@ bool perform_chosen_option(
 		cout << "Recording an expense" << endl;
 	
 		cout << "-----------------------------------" << endl;
+		record_expense(
+				recorded_amounts, 
+				recorded_categories,
+				recorded_descriptions
+			      );
+			
 	}
 		
 	else if (chosen_option == 2) {
