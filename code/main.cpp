@@ -76,13 +76,13 @@ int list_all_expenses(
 		
 		cout << "No expenses recorded yet!" << endl;
 	} else {
-		for (unsigned int i = 0; i < recorded_amounts.size() - 1; i++) {
+
+		cout << separator << "ID" <<  separator << "Amount" <<  separator <<  "Category" <<  separator << "Description" << separator << endl;
+		for (unsigned int i = 0; i < recorded_amounts.size(); i++) {
 			float amount {recorded_amounts.at(i)}; 
 			string category {recorded_categories.at(i)}; 
 			string description {recorded_descriptions.at(i)}; 
 
-			cout << separator << "ID" <<  separator << "Amount" <<  separator <<  "Category" <<  separator << "Description" << separator << endl;
-				
 			cout << separator << i << separator << amount << separator << category << separator << description << separator << endl;				
 		}
 	}
@@ -226,7 +226,7 @@ int main () {
 	 * record table Id , amount , category, Description
 	 * we can access a record using the id
 	 */
-	vector<float> recorded_amount{0.0}; 
+	vector<float> recorded_amount{}; 
 	vector<string> recorded_category{}; 
 	vector<string> recorded_description{}; 
 
