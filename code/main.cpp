@@ -1,12 +1,56 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <limits>
 
 using namespace std;
 
+// GLOBAL CONSTANTS
+const vector<string> available_categories {
+    "Housing",
+    "Utilities",
+    "Food",
+    "Transport",
+    "Insurance",
+    "Healthcare",
+    "Leisure",
+    "Shopping",
+    "Savings",
+    "Debt",
+    "Travel",
+    "Other"
+};
+
 void print_exit_message();
 // functions for each option in the menu
+string record_category()
+{	
+	
+	string selected_category {""};
+	bool valid_category {false};
+	do {
+	
+	int index {0};
+	for (auto c: available_categories) {
+	    	cout << index << ". " << c << endl; 
+		index++;
+	}
+	cout << "Select a category from the menu with number: ";
+	unsigned int user_option {available_categories.size()};
+	cin >> user_option;
 
+	if (user_option >= 0 && user_option < available_categories.size()) {
+		
+		selected_category = available_categories.at(user_option);
+		valid_category = true;
+	}else {
+		cout << "Invalid! Please select a category from the menu" << endl;
+	}
+
+	} while (!valid_category);
+
+	return selected_category;
+}
 int record_expense(
 		vector<float> &recorded_amounts, 
 	      	vector<string> &recorded_categories,
@@ -34,15 +78,20 @@ int record_expense(
 	}
 	
 	// Get the category; no need for validation
-	cout << "Please enter a category ( Leave empty for optional ):" << endl;
-	cin >> category;	
+	category = record_category();
 	
+	/* cout << "Please enter a category ( Leave empty for optional ):" << endl;
+	 getline(cin, category);	
+	*/ 
+
 	// Get the Description; 
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "Please enter a description ( Leave empty for optional ):" << endl;
-	cin >> description;
+	getline(cin, description);	
 	
 
 	// Confirmation
+	cout << endl;
 	cout << "Recording the following expense:" << endl;
 		
        	cout << "Amount: $" << amount << endl;
@@ -90,21 +139,47 @@ int list_all_expenses(
 	
 };
 
-int show_total_by_amount(){
-
-	cout << "Showing total by amount" << endl;
-	return 0;	
+void show_total_by_amount(
+		vector<float> &recorded_amounts
+		){
+	
+	size_t total_amount {};
+	if (recorded_amounts.size() == 0) {
+		cout << "No expenses recorded at this moment" << endl;
+		return;
+	}
+	for (size_t i {}; i < recorded_amounts.size(); i++) {
+		total_amount += recorded_amounts.at(i);
+	} 
+	cout << "Total Amount: $" <<  total_amount << endl; 
+	return ;	
 };
-int show_total_by_category(){
-
-	cout << "Showing total by category" << endl;
-	return 0;;
+void show_total_by_category(
+		vector<float> &recorded_amounts, 
+	      	vector<string> &recorded_categories,
+		vector<string> &recorded_descriptions
+		){
+	
+	size_t total_amount {};
+	string selected_category {""}; 
+	if (recorded_amounts.size() == 0) {
+		cout << "No expenses recorded at this moment" << endl;
+		return;
+	}
+	selected_category = record_category();
+	for (size_t i {}; i < recorded_amounts.size(); i++) {
+		if (recorded_categories.at(i) == selected_category) {
+			total_amount += recorded_amounts.at(i);
+		}	
+	} 
+	cout << "Total Amount for " << selected_category << ": $" <<  total_amount << endl; 
+	return ;
 
 }
 void print_exit_message () {
 	cout << "Exiting the program..." << endl;
 	cout << "Goodbye!" << endl;	
-
+	return;
 }
 
 
@@ -131,11 +206,11 @@ void print_menu(vector<string> options) {
 		return;
 	}
 	
-	cout << "Pick an Option by the number: " << endl;
 	for (unsigned int i = 0; i< options.size(); i++) {
 		unsigned int option_number = i + 1; 
 		cout << option_number << ". " <<  options.at(i) << endl;
 	}
+	return;
 }
 
 bool perform_chosen_option(
@@ -166,9 +241,8 @@ bool perform_chosen_option(
 	
 	if (chosen_option == 1) {
 		// Record an expense
-		cout << "Recording an expense" << endl;
-	
-		cout << "-----------------------------------" << endl;
+		cout << endl;
+		cout << "--- Recording an expense" << endl;
 		record_expense(
 				recorded_amounts, 
 				recorded_categories,
@@ -179,23 +253,30 @@ bool perform_chosen_option(
 		
 	else if (chosen_option == 2) {
 		// List all Expsenses
+		cout << endl;
+		cout << "--- Listing All Expenses" << endl;;
 		list_all_expenses(
 			recorded_amounts, 
 			recorded_categories,
 			recorded_descriptions
 			);
-
-		cout << "-----------------------------------" << endl;
 	}
 	else if (chosen_option == 3) {
-		show_total_by_amount();
+		cout << endl;
+		cout << "--- Total by Amount: " << endl;
+		show_total_by_amount(
+			recorded_amounts
+			);
 
-		cout << "-----------------------------------" << endl;
 	}
 	else if (chosen_option == 4) {
-		show_total_by_category();
-
-		cout << "-----------------------------------" << endl;
+		cout << endl;
+		cout << "--- Total by Category" << endl;
+		show_total_by_category(
+			recorded_amounts, 
+			recorded_categories,
+			recorded_descriptions
+			);
 	
 	}
 	// Exit choice
@@ -235,8 +316,10 @@ int main () {
 	//create_dummy_expense(record_id, record_amount, record_category, record_description);
 	
 	while (program_running) {
+		cout << endl;
 		print_menu(menu_options);
-		
+
+		cout << "Pick an Option by the number: " ;
 		cin >> current_choice;
 
 		// Perform the chosen option
