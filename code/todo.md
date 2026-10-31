@@ -1,5 +1,5 @@
 # Things to complete next session
 
-implement the **record_expense** function.
-- Also do some input validation on the all the input
+Last things to do to complete the MVP version
+- do some input validation on the all the input
 
